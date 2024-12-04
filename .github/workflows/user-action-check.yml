@@ -32,16 +32,16 @@ jobs:
         echo "Checking contents of cloned repository..."
         ls -la Test-course || { echo "Cloned directory not found!"; exit 1; }
 
-    - name: Wait for User Action
+    - name: Wait for User Action (Longer Time)
       run: |
         echo "Waiting for 'user-action.txt' to be created in the Test-course directory..."
-        for i in {1..10}; do
+        for i in {1..20}; do  # Increased retry attempts
           if [ -f "Test-course/user-action.txt" ]; then
             echo "User action verified: File 'user-action.txt' exists."
             exit 0
           fi
-          echo "File not found. Retrying in 30 seconds..."
-          sleep 30
+          echo "File not found. Retrying in 1 minute..."
+          sleep 60  # Increased wait time (1 minute)
         done
         echo "Validation failed: File 'user-action.txt' not found after waiting."
         exit 1
