@@ -3,7 +3,7 @@
 name: User Action Check
 
 on:
-  workflow_dispatch: # Allow manual start of the workflow
+  workflow_dispatch: # Allow manual start of the workfl
     inputs:
       repo_url:
         description: "Repository to clone"
