@@ -8,36 +8,37 @@ on:
       repo_url:
         description: "Repository to clone"
         required: true
-        default: "https://github.com/KelvinAbidha/Test-project.git"
+        default: "https://github.com/KelvinAbidha/Test-course" # Updated URL
 
 jobs:
   action-check:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
     - name: Clone User-Specified Repository
       run: |
         echo "Cloning repository from: ${{ inputs.repo_url }}"
-        git clone ${{ inputs.repo_url }} Test-project
+        git clone ${{ inputs.repo_url }} Test-course
         echo "Repository cloned successfully."
 
-    - name: Prompt User Action
+    - name: Debug Directory Listing
       run: |
-        echo "Action required: Please create a file named 'user-action.txt' in the cloned repository folder."
-        echo "Waiting for the user to perform the action..."
-        sleep 30  # Simulates waiting time for user action
+        echo "Checking contents of Test-course directory..."
+        ls -la Test-course
 
-    - name: Validate User Action
+    - name: Wait for User Action
       run: |
-        if [ -f "Test-project/user-action.txt" ]; then
-          echo "User action verified: File 'user-action.txt' exists."
-        else
-          echo "Validation failed: File 'user-action.txt' not found."
-          exit 1
-        fi
+        echo "Waiting for 'user-action.txt' to be created in the Test-course directory..."
+        for i in {1..10}; do
+          if [ -f "Test-course/user-action.txt" ]; then
+            echo "User action verified: File 'user-action.txt' exists."
+            exit 0
+          fi
+          echo "File not found. Retrying in 30 seconds..."
+          sleep 30
+        done
+        echo "Validation failed: File 'user-action.txt' not found after waiting."
+        exit 1
 
     - name: Proceed to Next Step
       if: success()
