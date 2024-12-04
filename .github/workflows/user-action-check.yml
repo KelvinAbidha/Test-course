@@ -3,28 +3,34 @@
 name: User Action Check
 
 on:
-  workflow_dispatch: # Allows manual start of the workflow
+  workflow_dispatch:
     inputs:
       repo_url:
         description: "Repository to clone"
         required: true
-        default: "https://github.com/KelvinAbidha/Test-course" # Updated URL
+        default: "https://github.com/KelvinAbidha/Test-course"
 
 jobs:
   action-check:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Clone User-Specified Repository
+    - name: Debug Environment Before Clone
+      run: |
+        echo "Git version:"
+        git --version
+        echo "Initial directory contents:"
+        ls -la
+
+    - name: Clone Repository
       run: |
         echo "Cloning repository from: ${{ inputs.repo_url }}"
-        git clone ${{ inputs.repo_url }} Test-course
-        echo "Repository cloned successfully."
+        git clone ${{ inputs.repo_url }} Test-course || { echo "Clone failed!"; exit 1; }
 
-    - name: Debug Directory Listing
+    - name: Verify Clone Directory
       run: |
-        echo "Checking contents of Test-course directory..."
-        ls -la Test-course
+        echo "Checking contents of cloned repository..."
+        ls -la Test-course || { echo "Cloned directory not found!"; exit 1; }
 
     - name: Wait for User Action
       run: |
